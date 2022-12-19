@@ -8,7 +8,7 @@ import (
 
 	"github.com/pip-services3-gox/pip-services3-commons-gox/data"
 
-	"github.com/service-infrastructure2/client-blobs-go/version1"
+	"github.com/pip-services-infrastructure2/client-blobs-go/version1"
 	"github.com/stretchr/testify/assert"
 )
 

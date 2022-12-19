@@ -5,10 +5,10 @@ import (
 	"encoding/base64"
 	"io"
 
+	"github.com/pip-services-infrastructure2/client-blobs-go/protos"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/data"
 	"github.com/pip-services3-gox/pip-services3-grpc-gox/clients"
-	"github.com/service-infrastructure2/client-blobs-go/protos"
 )
 
 type BlobGrpcClientV1 struct {

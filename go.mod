@@ -1,4 +1,4 @@
-module github.com/service-infrastructure2/client-blobs-go
+module github.com/pip-services-infrastructure2/client-blobs-go
 
 go 1.18
 
