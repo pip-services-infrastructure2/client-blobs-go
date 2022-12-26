@@ -15,10 +15,12 @@ func NewBlobsClientFactory() *BlobsClientFactory {
 	c.Factory = cbuild.NewFactory()
 
 	nullClientDescriptor := cref.NewDescriptor("service-blobs", "client", "null", "*", "1.0")
+	mockClientDescriptor := cref.NewDescriptor("service-blobs", "client", "mock", "*", "1.0")
 	cmdHttpClientDescriptor := cref.NewDescriptor("service-blobs", "client", "commandable-http", "*", "1.0")
 	cmdGrpcClientDescriptor := cref.NewDescriptor("service-blobs", "client", "commandable-grpc", "*", "1.0")
 
 	c.RegisterType(nullClientDescriptor, version1.NewBlobsNullClientV1)
+	c.RegisterType(mockClientDescriptor, version1.NewBlobsMockClientV1)
 	c.RegisterType(cmdHttpClientDescriptor, version1.NewBlobsCommandableHttpClientV1)
 	c.RegisterType(cmdGrpcClientDescriptor, version1.NewBlobsCommandableGrpcClientV1)
 	return &c

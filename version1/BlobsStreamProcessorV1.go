@@ -75,7 +75,7 @@ func (c *TBlobsStreamProcessorV1) GetBlobStreamById(ctx context.Context, correla
 		}
 
 		// Protection against infinite loop
-		if buffer != nil && len(buffer) > 0 {
+		if len(buffer) > 0 {
 			n, err2 := stream.Write(buffer)
 			if err2 != nil {
 				return nil, err
