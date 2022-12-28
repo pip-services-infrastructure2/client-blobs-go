@@ -33,10 +33,10 @@ func (c *TBlobsStreamProcessorV1) CreateBlobFromStream(ctx context.Context, corr
 	for {
 		size, err1 := stream.Read(buffer)
 
-		if err1 == io.EOF {
+		if err1 == io.EOF && size == 0 {
 			break
 		}
-		if err1 != nil {
+		if err1 != nil && err1 != io.EOF {
 			return nil, err1
 		}
 
