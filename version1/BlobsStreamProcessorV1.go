@@ -2,7 +2,9 @@ package version1
 
 import (
 	"context"
+	"errors"
 	"io"
+	"math"
 	"time"
 
 	"github.com/pip-services3-gox/pip-services3-commons-gox/data"
@@ -33,10 +35,10 @@ func (c *TBlobsStreamProcessorV1) CreateBlobFromStream(ctx context.Context, corr
 	for {
 		size, err1 := stream.Read(buffer)
 
-		if err1 == io.EOF {
+		if err1 == io.EOF && size == 0 {
 			break
 		}
-		if err1 != nil {
+		if err1 != nil && err1 != io.EOF {
 			return nil, err1
 		}
 
@@ -65,11 +67,21 @@ func (c *TBlobsStreamProcessorV1) GetBlobStreamById(ctx context.Context, correla
 
 	// Begin blob read
 	blob, err := reader.BeginBlobRead(ctx, correlationId, blobId)
+	if err != nil {
+		return nil, err
+	}
+
+	if blob == nil || blob.Size == 0 {
+		return nil, errors.New("BLOB WITH ZERO SIZE")
+	}
+
+	size := blob.Size
 
 	// Read in chunks
-	start := int64(0)
+	skip := int64(0)
+	take := int64(math.Min(float64(chunkSize), float64(size)))
 	for {
-		buffer, err1 := reader.ReadBlobChunk(ctx, correlationId, blobId, start, int64(chunkSize))
+		buffer, err1 := reader.ReadBlobChunk(ctx, correlationId, blobId, skip, take)
 		if err1 != nil {
 			return nil, err1
 		}
@@ -81,7 +93,9 @@ func (c *TBlobsStreamProcessorV1) GetBlobStreamById(ctx context.Context, correla
 				return nil, err
 			}
 
-			start = start + int64(n)
+			size -= int64(n)
+			skip += int64(n)
+			take = int64(math.Min(float64(chunkSize), float64(size)))
 
 			if len(buffer) < chunkSize {
 				break

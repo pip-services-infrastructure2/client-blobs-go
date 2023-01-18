@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pip-services3-gox/pip-services3-commons-gox/config"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/convert"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/data"
 	"github.com/pip-services3-gox/pip-services3-commons-gox/errors"
@@ -26,6 +27,11 @@ func NewBlobsMockClientV1() *BlobsMockClientV1 {
 		maxBlobSize: 100 * 1024,
 		content:     make(map[string][]byte, 0),
 	}
+}
+
+func (c *BlobsMockClientV1) Configure(ctx context.Context, config *config.ConfigParams) {
+	c.chunkSize = config.GetAsLongWithDefault("options.chunk_size", c.chunkSize)
+	c.maxBlobSize = config.GetAsLongWithDefault("options.max_blob_size", c.maxBlobSize)
 }
 
 func (c *BlobsMockClientV1) matchString(value string, search string) bool {
